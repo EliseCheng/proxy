@@ -18,10 +18,10 @@ ADD ./entrypoint.sh  /home/heng/
 ADD ./squid.conf    /etc/squid/
 ADD ./stunnel.pem   /etc/stunnel/
 ADD ./stunnel.conf   /etc/stunnel/
+ADD ./password   /etc/squid/
 
 
 RUN /usr/sbin/squid -z
-RUN touch /etc/squid/password
 
 
 RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
@@ -29,6 +29,8 @@ RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
 
 EXPOSE 22
 EXPOSE 80
+EXPOSE 666
+EXPOSE 8080
 EXPOSE 3128
 EXPOSE 1080
 
