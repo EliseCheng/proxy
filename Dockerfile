@@ -1,4 +1,4 @@
-FROM centos:latest
+FROM centos:centos6
 MAINTAINER Heng <1009662099@qq.com>
 
 RUN yum install -y openssh-server
