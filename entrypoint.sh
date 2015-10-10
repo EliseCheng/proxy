@@ -4,6 +4,7 @@ ${ROOTPASS}
 ${ROOTPASS}
 EOF
 
+/usr/sbin/sshd-keygen
 /usr/sbin/sshd -D
 /usr/sbin/squid start
 stunnel /etc/stunnel/stunnel.conf
