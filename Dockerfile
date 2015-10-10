@@ -1,7 +1,6 @@
 FROM centos:latest
 MAINTAINER Heng <1009662099@qq.com>
 
-RUN yum update
 RUN yum install -y openssl &&　yum install -y passwd && && yum install -y stunnel　&& yum install -y squid　&& yum install httpd
 
 RUN mkdir /home/heng/
