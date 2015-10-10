@@ -15,12 +15,18 @@ ADD ./stunnel.pem   /etc/stunnel/
 ADD ./stunnel.conf   /etc/stunnel/
 
 
+RUN /usr/sbin/squid -z
+RUN touch /etc/squid/password
+
+
+
 EXPOSE 22
 EXPOSE 80
 EXPOSE 3128
 EXPOSE 1080
 
-ENTRYPOINT ["bash", "/home/heng/entrypoint.sh" ]
 
 USER root
 ENV ROOTPASS=rfvujm4567
+
+ENTRYPOINT ["bash", "/home/heng/entrypoint.sh" ]

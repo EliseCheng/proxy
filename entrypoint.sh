@@ -4,6 +4,7 @@ ${ROOTPASS}
 ${ROOTPASS}
 EOF
 
-/etc/rc.d/init.d/squid start
-
+/usr/sbin/squid start
 stunnel /etc/stunnel/stunnel.conf
+
+while true;do sleep 10;  done
