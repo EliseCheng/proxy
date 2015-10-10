@@ -1,19 +1,17 @@
 #
 # Recommended minimum configuration:
 #
-acl manager proto cache_object
-acl localhost src 127.0.0.1/32 ::1
-acl to_localhost dst 127.0.0.0/8 0.0.0.0/32 ::1
 
 # Example rule allowing access from your local networks.
 # Adapt to list your (internal) IP networks from where browsing
-# should be allowed
-acl localnet src 10.0.0.0/8	# RFC1918 possible internal network
+# should be allow
+acl manager proto cache_object
+acl localhost src 127.0.0.1/32 ::1
 acl localnet src 172.16.0.0/12	# RFC1918 possible internal network
-acl localnet src 192.168.0.0/16	# RFC1918 possible internal network
 acl localnet src fc00::/7       # RFC 4193 local private network range
 acl localnet src fe80::/10      # RFC 4291 link-local (directly plugged) machines
 
+acl SSL_ports port 666
 acl SSL_ports port 443
 acl Safe_ports port 80		# http
 acl Safe_ports port 21		# ftp
@@ -30,15 +28,25 @@ acl CONNECT method CONNECT
 #
 # Recommended minimum Access Permission configuration:
 #
-# Only allow cachemgr access from localhost
-http_access allow manager localhost
-http_access deny manager
-
 # Deny requests to certain unsafe ports
 http_access deny !Safe_ports
 
 # Deny CONNECT to other than secure SSL ports
 http_access deny CONNECT !SSL_ports
+
+
+
+auth_param basic program /usr/lib64/squid/ncsa_auth /etc/squid/password
+auth_param basic children 5 
+auth_param basic realm input your password
+auth_param basic credentialsttl 2 hours 
+acl normal proxy_auth REQUIRED  
+acl proxy myport 3128
+http_access allow proxy normal 
+
+# Only allow cachemgr access from localhost
+http_access allow localhost manager
+http_access deny manager
 
 # We strongly recommend the following be uncommented to protect innocent
 # web applications running on the proxy server who think the only
@@ -51,48 +59,42 @@ http_access deny CONNECT !SSL_ports
 
 
 
-auth_param basic program /usr/lib64/squid/ncsa_auth /etc/squid/password
-auth_param basic children 5 
-auth_param basic realm input your password
-auth_param basic credentialsttl 2 hours 
-acl normal proxy_auth REQUIRED  
-acl proxy myport 3128
-http_access allow proxy normal 
-
-
 
 
 # Example rule allowing access from your local networks.
 # Adapt localnet in the ACL section to list your (internal) IP networks
 # from where browsing should be allowed
-http_access allow localnet
+#http_access allow localnet
 http_access allow localhost
 
 # And finally deny all other access to this proxy
 http_access deny all
+#http_access allow all
 
 # Squid normally listens to port 3128
 http_port 3128
-
+#https_port 666 intercept  ssl-bump cert=/etc/squid/cert.pem key=/etc/squid/key.pem
 # Uncomment and adjust the following to add a disk cache directory.
-
-
 cache_mem 128 MB
 maximum_object_size 4 MB
 minimum_object_size 0 KB 
-maximum_object_size_in_memory 4096 KB 
-access_log /var/log/squid/access.log
-cache_log /var/log/squid/cache.log
+maximum_object_size_in_memory 4096 KB ��
+access_log /var/log/squid/access.log combined
+cache_log /var/log/squid/cache.log ��
 cache_swap_high 95
 logfile_rotate 30
 
-
 cache_dir ufs /var/spool/squid 100 16 256
+
+
+
 
 # Leave coredumps in the first cache dir
 coredump_dir /var/spool/squid
 
+#
 # Add any of your own refresh_pattern entries above these.
+#
 refresh_pattern ^ftp:		1440	20%	10080
 refresh_pattern ^gopher:	1440	0%	1440
 refresh_pattern -i (/cgi-bin/|\?) 0	0%	0
