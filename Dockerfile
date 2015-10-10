@@ -8,7 +8,6 @@ RUN yum install -y squid　
 RUN yum install -y httpd
 
 RUN mkdir /home/heng/
-RUN mkdir /etc/stunnel/
 
 ADD ./entrypoint.sh  /home/heng/
 ADD ./squid.conf    /etc/squid/
